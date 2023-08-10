@@ -17,11 +17,11 @@ BEGIN
   INTO item, customer_id, customer_island, vendor_id, vendor_island, quantity
   FROM world.contractors c
   JOIN world.contractors v ON v."type" = 'vendor' AND c.item = v.item
-  LEFT JOIN actions.offers o ON c.id = o.contractor
+  LEFT JOIN public.contracts o ON c.id = o.customer_id
   LEFT JOIN public.distances vd ON vd.island1 = island_id AND vd.island2 = v.island
   LEFT JOIN public.distances cd ON cd.island1 = v.island AND cd.island2 = c.island
   WHERE
-    c."type" = 'customer' AND o.contractor is null
+    c."type" = 'customer' AND o.ship is null
   GROUP BY c.item, c.id, c.island, v.id, v.island, item_quantity, vd.distance, cd.distance
   ORDER BY profit DESC
   LIMIT 1;
@@ -35,8 +35,8 @@ BEGIN
     end if;
     INSERT INTO actions.offers (contractor, quantity) VALUES (vendor_id, quantity);
     INSERT INTO actions.offers (contractor, quantity) VALUES (customer_id, quantity) RETURNING id INTO offer_id;
-    INSERT INTO public.contracts (ship, status, item, vendor_island, customer_island, quantity, offer)
-      VALUES (ship_id, status, item, vendor_island, customer_island, quantity, offer_id);
+    INSERT INTO public.contracts (ship, status, item, vendor_island, customer_id, customer_island, quantity, offer)
+      VALUES (ship_id, status, item, vendor_island, customer_id, customer_island, quantity, offer_id);
     raise notice 'offer % status %', offer_id, status;
   end if;
 END $$;

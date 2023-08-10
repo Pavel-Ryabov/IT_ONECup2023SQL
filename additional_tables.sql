@@ -4,6 +4,7 @@ CREATE TABLE public.contracts (
   "status" contract_status,
   "item" INTEGER,
   "vendor_island" INTEGER,
+  "customer_id" INTEGER,
   "customer_island" INTEGER,
   "quantity" DOUBLE PRECISION,
   "offer" INTEGER,
