@@ -5,9 +5,14 @@ CREATE OR REPLACE FUNCTION public.distance(x1 DOUBLE PRECISION, y1 DOUBLE PRECIS
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION public.profit_per_unit_of_time(price DOUBLE PRECISION, quantity DOUBLE PRECISION, speed DOUBLE PRECISION, distnace1 DOUBLE PRECISION, distnace2 DOUBLE PRECISION) RETURNS DOUBLE PRECISION AS $$
+CREATE OR REPLACE FUNCTION public.profit_per_unit_of_time(customer_price DOUBLE PRECISION, vendor_price DOUBLE PRECISION, quantity DOUBLE PRECISION,
+  speed DOUBLE PRECISION, distnace1 DOUBLE PRECISION, distnace2 DOUBLE PRECISION) RETURNS DOUBLE PRECISION AS $$
   BEGIN
-    RETURN price * quantity / ((distnace1 + distnace2) * speed + quantity * constants.transfer_time_per_unit!);
+    --raise notice 'PROFIT cp % vp: % q: % s: % d1: % d2: % p: % c: %, v: %',
+    --customer_price, vendor_price, quantity, speed, distnace1, distnace2,
+    --(customer_price - vendor_price) * quantity / ((distnace1 + distnace2) * speed + quantity * constants.transfer_time_per_unit!),
+    --cust, vend;
+    RETURN (customer_price - vendor_price) * quantity / ((distnace1 + distnace2) * speed + quantity * constants.transfer_time_per_unit!);
   END
 $$ LANGUAGE plpgsql;
 

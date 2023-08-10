@@ -3,6 +3,7 @@ CREATE TABLE public.contracts (
   "ship" INTEGER PRIMARY KEY NOT NULL,
   "status" contract_status,
   "item" INTEGER,
+  "vendor_id" INTEGER,
   "vendor_island" INTEGER,
   "customer_id" INTEGER,
   "customer_island" INTEGER,
