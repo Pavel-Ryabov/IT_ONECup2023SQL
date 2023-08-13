@@ -13,7 +13,7 @@ fs.readdirSync(__dirname).forEach(fileName => {
   target += '\n\n';
 });
 
-target = target.replace(/constants\.(.+)!/g, (substring, args) => constants[args]);
+target = target.replace(/constants\.(.+?)!/g, (substring, args) => constants[args]);
 
 const targetDir = __dirname + '/target/';
 if (!fs.existsSync(targetDir)){

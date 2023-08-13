@@ -6,13 +6,29 @@ $$ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION public.profit_per_unit_of_time(customer_price DOUBLE PRECISION, vendor_price DOUBLE PRECISION, quantity DOUBLE PRECISION,
-  speed DOUBLE PRECISION, distnace1 DOUBLE PRECISION, distnace2 DOUBLE PRECISION) RETURNS DOUBLE PRECISION AS $$
+  speed DOUBLE PRECISION, distance1 DOUBLE PRECISION, distance2 DOUBLE PRECISION) RETURNS DOUBLE PRECISION AS $$
   BEGIN
     --raise notice 'PROFIT cp % vp: % q: % s: % d1: % d2: % p: % c: %, v: %',
     --customer_price, vendor_price, quantity, speed, distnace1, distnace2,
     --(customer_price - vendor_price) * quantity / ((distnace1 + distnace2) * speed + quantity * constants.transfer_time_per_unit!),
     --cust, vend;
-    RETURN (customer_price - vendor_price) * quantity / ((distnace1 + distnace2) * speed + quantity * constants.transfer_time_per_unit!);
+    RETURN (customer_price - vendor_price) * quantity / ((distance1 + distance2) * speed + quantity * 2 * constants.transfer_time_per_unit!);
+  END
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION public.profit_per_unit_of_time(customer_price DOUBLE PRECISION, vendor_price DOUBLE PRECISION, quantity DOUBLE PRECISION,
+  distance DOUBLE PRECISION) RETURNS DOUBLE PRECISION AS $$
+  BEGIN
+    RETURN (customer_price - vendor_price) * quantity / (distance + quantity * 2 * constants.transfer_time_per_unit!);
+  END
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION public.profit_per_unit_of_time(capacity DOUBLE PRECISION, quantity DOUBLE PRECISION, speed DOUBLE PRECISION,
+  distance DOUBLE PRECISION, profit DOUBLE PRECISION) RETURNS DOUBLE PRECISION AS $$
+  BEGIN
+    RETURN ABS(capacity - quantity) * profit - (distance / speed);
   END
 $$ LANGUAGE plpgsql;
 
@@ -54,3 +70,9 @@ CREATE OR REPLACE FUNCTION public.get_next_status(status public.contract_status)
   END
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION public.get_ex_time(quantity DOUBLE PRECISION, speed DOUBLE PRECISION, distance DOUBLE PRECISION) RETURNS DOUBLE PRECISION AS $$
+  BEGIN
+    raise notice 'get_ex_time quantity: % speed: % distance: %', quantity, speed, distance;
+    RETURN quantity * 2 * constants.transfer_time_per_unit! + distance / speed;
+  END
+$$ LANGUAGE plpgsql;
