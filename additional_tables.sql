@@ -1,17 +1,21 @@
 CREATE TYPE public.contract_status AS ENUM ('pending', 'rejected', 'completed', 'load', 'loading', 'unload', 'unloading', 
-'moveToVendor', 'movingToVendor', 'moveToCustomer', 'movingToCustomer', 'needVendor', 'needCustomer');
+'moveToVendor', 'movingToVendor', 'moveToCustomer', 'movingToCustomer', 'needVendor', 'needVendorOnIsland', 'needVendorOnIslandAndLoad', 'needCustomer');
 CREATE TABLE public.contracts (
-  "ship" INTEGER PRIMARY KEY NOT NULL,
+  "id" SERIAL PRIMARY KEY NOT NULL,
+  "ship" INTEGER,
   "status" contract_status,
   "item" INTEGER,
   "vendor_id" INTEGER,
   "vendor_island" INTEGER,
-  "customer_id" INTEGER,
+  "vendor_island_x" DOUBLE PRECISION,
+  "vendor_island_y" DOUBLE PRECISION,
+  "vendor_price" DOUBLE PRECISION,
   "customer_island" INTEGER,
+  "customer_island_x" DOUBLE PRECISION,
+  "customer_island_y" DOUBLE PRECISION,
   "quantity" DOUBLE PRECISION,
-  "offer" INTEGER,
   "vendor_offer" INTEGER,
-  "contract" INTEGER
+  "vencor_contract" INTEGER
 );
 
 -- CREATE TABLE public.distances (

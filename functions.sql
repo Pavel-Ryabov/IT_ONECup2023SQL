@@ -70,6 +70,22 @@ CREATE OR REPLACE FUNCTION public.get_next_status(status public.contract_status)
   END
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION public.get_next_status_after_reject(status public.contract_status) RETURNS public.contract_status AS $$
+  DECLARE
+	  next_status public.contract_status;
+  BEGIN
+    case status
+      when 'movingToVendor'::public.contract_status then
+        next_status = 'needVendorOnIsland'::public.contract_status;
+		  when 'loading'::public.contract_status then
+        next_status = 'needVendorOnIslandAndLoad'::public.contract_status;
+		  else
+	    	next_status = 'rejected'::public.contract_status;
+		end case;
+    RETURN next_status;
+  END
+$$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION public.get_ex_time(quantity DOUBLE PRECISION, speed DOUBLE PRECISION, distance DOUBLE PRECISION) RETURNS DOUBLE PRECISION AS $$
   BEGIN
     raise notice 'get_ex_time quantity: % speed: % distance: %', quantity, speed, distance;
